@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <cstdlib>
 #include <time.h>
+
 #include <stdbool.h>
 #include <sys/ioctl.h>
 #include <termios.h>
@@ -22,6 +23,7 @@ void get(){
 void set(){
     tcsetattr(STDIN_FILENO, TCSANOW, &orig_termios);
 }
+
 using namespace std;
 
 #define MOVE_CURSOR(x, y) cout << "\033[" << (x) << ";" << (y) << "H"
@@ -38,8 +40,7 @@ bool gameRunning = true;
 int width, height;
 
 SnakeDirection userInput(SnakeDirection direction)
-{
-  struct termios oldt, newt;
+{   struct termios oldt, newt;
     int ch;
     int oldf;
 
@@ -79,7 +80,8 @@ SnakeDirection userInput(SnakeDirection direction)
             break;
         }
     }
-return direction;
+
+    return direction;
 }
 
 void HideCursor()
@@ -96,7 +98,7 @@ void ShowCursor()
 
 void getTerminalSize(int &width, int &height)
 {
-  struct winsize w;
+    struct winsize w;
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == -1 || w.ws_col == 0)
     {
         width = 80;
@@ -107,6 +109,10 @@ void getTerminalSize(int &width, int &height)
         width = w.ws_col;
         height = w.ws_row;
     }
+
+
+}
+
 void setSize()
 {
     getTerminalSize(width, height);
@@ -333,26 +339,14 @@ void printBoard()
 
 void gameResult(string playerName, int score)
 {
-    Sleep(1000);
-    cout << "\033[2J\033[H";
-    cout.flush();
-    setColor(31);
-    setbold();
-    cout << setw(45) << "*****  *    *  *****  **** " << endl;
-    cout << setw(45) << "*   *  *    *  *      *   *" << endl;
-    cout << setw(45) << "*   *   *  *   ***    **** " << endl;
-    cout << setw(45) << "*   *   *  *   *      * *  " << endl;
-    cout << setw(45) << "*****    **    *****  *  * " << endl;
-    resetchange();
-    setColor(35);
     cout << setw(22) << playerName << ", you scored : " << score << endl;
-    resetchange();
+
 }
 
 int main()
 {
-  get();
-string playerName;
+        get();
+    string playerName;
     cout << "Enter Your Name : ";
     cin >> playerName;
     int dfc = setDifficulty();
@@ -386,6 +380,6 @@ string playerName;
     }
     gameResult(playerName, score);
     ShowCursor();
-set();
-return 0;
+        set();
+    return 0;
 }
